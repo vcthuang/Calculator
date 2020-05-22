@@ -9,8 +9,25 @@ export default class Calculator extends Component {
     }
   };
 
-  handleDisplay = display => this.setState({display});
+  handleDisplay = display => {
+    let newDisplay = this.state.display;
+    if (newDisplay === "0")
+      newDisplay = display;
+    else
+      newDisplay = this.state.display + display;
 
+    this.setState({display: newDisplay});
+  }
+
+  onClickAC= () => {
+    this.setState({display: "0"});
+  }
+
+  onClickEquals= () => {
+    let answer = eval(this.state.display);
+    this.setState({display: answer});
+  }
+  
   render() {
     const numbers = [
       {id: "zero", letter: "0"}, 
@@ -22,7 +39,8 @@ export default class Calculator extends Component {
       {id: "six", letter: "6"}, 
       {id: "seven", letter: "7"},
       {id: "eight", letter: "8"},
-      {id: "nine", letter: "9"}
+      {id: "nine", letter: "9"},
+      {id: "decimal", letter: "."}
     ];
 
     const Operators = [
@@ -46,9 +64,9 @@ export default class Calculator extends Component {
           </div>
           
           <div className="card-body">
-            <div className = "row">              
-              <div className = "col-sm-9">
+            <div className = "row">       
               
+              <div className = "col-sm-9">
                 {numbers.map (data => (  
                   <Keypad 
                     className = "rounded-circle btn btn-secondary col-sm-3 m-2 p-1"
@@ -56,16 +74,9 @@ export default class Calculator extends Component {
                     letter = {data.letter}
                     handleDisplay = {this.handleDisplay}
                     />
-                ))}                
+                ))}
+              </div>
               
-              <div
-                className = "rounded-circle btn btn-secondary col-sm-3 m-2 p-1"
-                id = "decimal"
-                onClick = {this.onClick}>
-                <h4>. </h4>    
-              </div>
-
-              </div>
               <div className = "col-sm-3">
                 {Operators.map (data => (
                   <Keypad
@@ -76,23 +87,24 @@ export default class Calculator extends Component {
                     />
                 ))}
               </div>
+              
               <div className="w-100"></div>
-                <div className = "col-sm-3"></div>
+
+              <div className = "col-sm-3"></div>
                 <div
                   className = "rounded-circle btn btn-warning col-sm-2 mr-3"
                   id = "clear"
-                  onClick = {this.onClick}>
+                  onClick = {this.onClickAC}>
                   <h4>AC</h4>    
                 </div>
                 <div
                   className = "rounded-circle btn btn-success col-sm-3 ml-5"
                   id = "equals"
-                  onClick = {this.onClickEqual}>
+                  onClick = {this.onClickEquals}>
                   <h4>=</h4>    
                 </div>
               </div>
           </div>
-
         </div>
       </div>
     )
