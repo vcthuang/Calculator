@@ -68,7 +68,6 @@ export default class Calculator extends Component {
   
   render() {
     const numbers = [
-      {id: "zero", letter: "0"}, 
       {id: "one", letter: "1"}, 
       {id: "two", letter: "2"}, 
       {id: "three", letter: "3"}, 
@@ -78,6 +77,7 @@ export default class Calculator extends Component {
       {id: "seven", letter: "7"},
       {id: "eight", letter: "8"},
       {id: "nine", letter: "9"},
+      {id: "zero", letter: "0"},
       {id: "decimal", letter: "."}
     ];
 
@@ -91,7 +91,7 @@ export default class Calculator extends Component {
     return (
       <div className = "calculator">
         <div className="card bg-dark text-secondary">
-          <div className="card-header text-right" id="display">
+          <div className="card-header border-primary text-right" id="display">
             <h1>{this.state.display}</h1>
           </div>
           
@@ -100,7 +100,8 @@ export default class Calculator extends Component {
               
               <div className = "col-9">
                 {numbers.map (data => (  
-                  <Keypad 
+                  <Keypad
+                    key={data.id}
                     className = "rounded-circle btn btn-secondary col-3 m-2 p-1"
                     id = {data.id}
                     letter = {data.letter}
@@ -112,6 +113,7 @@ export default class Calculator extends Component {
               <div className = "col-3">
                 {Operators.map (data => (
                   <Keypad
+                    key={data.id}
                     className = "rounded-circle btn btn-info col-12 m-2"
                     id = {data.id}
                     letter = {data.letter}
