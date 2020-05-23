@@ -11,10 +11,47 @@ export default class Calculator extends Component {
 
   handleDisplay = display => {
     let newDisplay = this.state.display;
-    if (newDisplay === "0")
-      newDisplay = display;
-    else
-      newDisplay = this.state.display + display;
+    const lastInput = newDisplay[newDisplay.length - 1];
+    let secondLast= null;
+    let found = null;
+
+    if (newDisplay.length > 1) {
+      secondLast = newDisplay[newDisplay.length - 2];
+      const regex = /(\d*\.\d*)$/;
+      found = newDisplay.match(regex);
+    }
+    
+    switch (display) {
+      case ".":
+        if (!found)
+          newDisplay = this.state.display + display;
+        break;
+      case "-": 
+        // -- => +
+        if (lastInput === '-') 
+          newDisplay = newDisplay.slice(0, -1) + "+";
+        else
+          newDisplay = this.state.display + display;
+        break;
+      case "+":
+      case "*":
+      case "/":
+        // * - + => +, use last operator
+        if ((lastInput === "+") || (lastInput === "/") || (lastInput === "*"))
+          newDisplay = newDisplay.slice(0, -1) + display;
+        // * - operations on negative number is allowed
+        else if ( (lastInput === "-") && 
+          ((secondLast === "+") || (secondLast === "/") || (secondLast === "*")) )
+          newDisplay = newDisplay.slice(0, -2) + display;
+        else
+          newDisplay = this.state.display + display;
+        break;
+      default:
+        if (newDisplay === "0")
+          newDisplay = display;
+        else
+          newDisplay = this.state.display + display;
+    }
 
     this.setState({display: newDisplay});
   }
@@ -50,12 +87,6 @@ export default class Calculator extends Component {
       {id: "divide", letter: "/"}
     ]
 
-    // const others = [
-    //   {id: "decimal", letter: "."},
-    //   {id: "clear", letter: "AC"},
-    //   {id: "equals", letter: "="}
-    // ];
-
     return (
       <div className = "calculator">
         <div className="card bg-dark text-secondary">
@@ -66,10 +97,10 @@ export default class Calculator extends Component {
           <div className="card-body">
             <div className = "row">       
               
-              <div className = "col-sm-9">
+              <div className = "col-9">
                 {numbers.map (data => (  
                   <Keypad 
-                    className = "rounded-circle btn btn-secondary col-sm-3 m-2 p-1"
+                    className = "rounded-circle btn btn-secondary col-3 m-2 p-1"
                     id = {data.id}
                     letter = {data.letter}
                     handleDisplay = {this.handleDisplay}
@@ -77,10 +108,10 @@ export default class Calculator extends Component {
                 ))}
               </div>
               
-              <div className = "col-sm-3">
+              <div className = "col-3">
                 {Operators.map (data => (
                   <Keypad
-                    className = "rounded-circle btn btn-info col-sm-12 m-2"
+                    className = "rounded-circle btn btn-info col-12 m-2"
                     id = {data.id}
                     letter = {data.letter}
                     handleDisplay = {this.handleDisplay}
@@ -90,15 +121,15 @@ export default class Calculator extends Component {
               
               <div className="w-100"></div>
 
-              <div className = "col-sm-3"></div>
+              <div className = "col-3"></div>
                 <div
-                  className = "rounded-circle btn btn-warning col-sm-2 mr-3"
+                  className = "rounded-circle btn btn-warning col-2 mr-3"
                   id = "clear"
                   onClick = {this.onClickAC}>
                   <h4>AC</h4>    
                 </div>
                 <div
-                  className = "rounded-circle btn btn-success col-sm-3 ml-5"
+                  className = "rounded-circle btn btn-success col-3 ml-5"
                   id = "equals"
                   onClick = {this.onClickEquals}>
                   <h4>=</h4>    
