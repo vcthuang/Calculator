@@ -18,6 +18,7 @@ export default class Calculator extends Component {
     if (newDisplay.length > 1) {
       secondLast = newDisplay[newDisplay.length - 2];
       const regex = /(\d*\.\d*)$/;
+      //const regex = /(\d*[.]\d*)$/;
       found = newDisplay.match(regex);
     }
     
